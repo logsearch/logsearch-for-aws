@@ -1,0 +1,8 @@
+/.blobs
+/.bosh_config
+/.dev_builds
+/.ruby-version
+/blobs
+/config/private.yml
+/config/dev.yml
+/dev_releases

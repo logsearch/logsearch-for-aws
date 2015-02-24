@@ -1,0 +1,29 @@
+{
+  "template" : "logstash-*",
+  "order" : 128,
+  "mappings" : {
+    "aws-cloudtrail" : {
+      "dynamic_templates" : [
+        {
+          "string_fields" : {
+            "match" : "*",
+            "match_mapping_type" : "string",
+            "mapping" : {
+              "type" : "string",
+              "index" : "not_analyzed"
+            }
+          }
+        }
+      ],
+      "properties" : {
+        "eventTime" : {
+          "type" : "date"
+        },
+        "userAgent" : {
+          "type" : "string",
+          "index" : "analyzed"
+        }
+      }
+    }
+  }
+}

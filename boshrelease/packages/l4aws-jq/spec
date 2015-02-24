@@ -1,0 +1,6 @@
+---
+name: l4aws-jq
+dependencies: []
+files:
+  # http://stedolan.github.io/jq/download/linux64/jq
+  - jq-blobs/jq-1.4.tgz

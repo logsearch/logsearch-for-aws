@@ -1,0 +1,113 @@
+---
+name: l4aws-lite
+director_uuid: 4e46066f-e59b-493e-b775-accc1a7bc6e2
+
+releases:
+- name: logsearch
+  version: latest
+- name: logsearch-for-aws
+  version: latest
+
+compilation:
+  workers: 2
+  network: default
+  reuse_compilation_vms: true
+  cloud_properties: {}
+
+update:
+  serial: true
+  canaries: 1
+  canary_watch_time: 30000
+  update_watch_time: 30000
+  max_in_flight: 1
+  max_errors: 1
+
+resource_pools:
+- name: warden
+  network: default
+  size: 2
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+  cloud_properties: {}
+
+jobs:
+ - name: l4aws
+   release: logsearch
+   templates: 
+    - release: logsearch-for-aws
+      name: l4aws-main
+   update:
+     serial: true
+   instances: 1
+   resource_pool: warden
+   networks:
+    - name: default
+      default:
+       - dns
+       - gateway
+      static_ips:
+       - 10.244.2.2
+ - name: elasticsearch
+   release: logsearch
+   templates: 
+    - release: logsearch
+      name: elasticsearch
+   update:
+     serial: true
+   instances: 1
+   resource_pool: warden
+   networks:
+    - name: default
+      static_ips:
+       - 10.244.2.6
+
+properties: 
+  l4aws:
+    # uncomment these next two lines and add your credentials
+    # access_key_id: ""
+    # secret_access_key: ""
+
+    # uncomment and add your queue name
+    # queue: ""
+
+    # change these if you are working outside of us-east-1
+    region: "us-east-1"
+    s3_endpoint: "s3-external-1.amazonaws.com"
+  elasticsearch:
+    host: 10.244.2.6
+    cluster_name: logsearch--bosh-lite
+    config_options: |
+      http.cors.enabled: true
+    exec:
+      environment:
+        ES_HEAP_SIZE: 256M
+
+# Warden CPI requires crappy network settings; so "hide" them away here
+networks:
+- name: default
+  # Assumes up to 7 VMs, including 4 static and 3 dynamic.
+  # Plus 7 (double the size) unused IPs, due to BOSH bug/quirk.
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.2.0/30
+    reserved:
+    - 10.244.2.1
+    static:
+    - 10.244.2.2
+  - cloud_properties:
+      name: random
+    range: 10.244.2.4/30
+    reserved:
+    - 10.244.2.5
+    static:
+    - 10.244.2.6
+
+apply_spec:
+  properties:
+    ntp:
+      - 0.europe.pool.ntp.org
+      - 1.europe.pool.ntp.org
+      - 2.europe.pool.ntp.org
+      - 3.europe.pool.ntp.org

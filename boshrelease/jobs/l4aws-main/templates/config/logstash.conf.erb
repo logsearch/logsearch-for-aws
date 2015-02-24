@@ -1,0 +1,61 @@
+input {
+  sqs {
+    <% if p('l4aws.access_key_id') %>
+      access_key_id => "<%= p('l4aws.access_key_id') %>"
+      secret_access_key => "<%= p('l4aws.secret_access_key') %>"
+    <% end %>
+    queue => "<%= p('l4aws.queue') %>"
+    region => "<%= p('l4aws.region') %>"
+    add_field => [ "@type", "aws-cloudtrail-sqs" ]
+  }
+
+  file {
+    add_field => [ "@type", "aws-cloudtrail" ]
+    discover_interval => 30
+    path => "/var/vcap/store/l4aws-main/cloudtrail/*.log"
+    sincedb_path => "/var/vcap/store/l4aws-main/cloudtrail.sincedb"
+    start_position => "beginning"
+    codec => json
+  }
+}
+
+filter {
+  if "aws-cloudtrail-sqs" == [@type] {
+    json {
+      source => "Message"
+      target => "MessageObj"
+    }
+  } else if "aws-cloudtrail" == [@type] {
+    # file names are arbitrary with this tool; drop them
+    mutate {
+      remove_field => [ "host" , "path" ]
+    }
+
+    date {
+      match => [ "eventTime" , "ISO8601" ]
+    }
+  }
+}
+
+output {
+  if "aws-cloudtrail-sqs" == [@type] {
+    exec {
+      command => "/var/vcap/jobs/l4aws-main/bin/cloudtrail-pull-s3 %{MessageObj[s3Bucket]} %{MessageObj[s3ObjectKey][0]}"
+    }
+  }
+
+  if "aws-cloudtrail" == [@type] {
+    elasticsearch_http {
+      host => "<%= p("elasticsearch.host") %>:<%= p("elasticsearch.port") %>"
+      flush_size => <%= p("elasticsearch.flush_size") %>
+      <% if p('logstash_parser.idle_flush_time', nil) %>
+          idle_flush_time => <%= p('logstash_parser.idle_flush_time') %>
+      <% end %>
+      document_id => "%{eventID}"
+      index_type => "%{@type}"
+      template => "/var/vcap/jobs/l4aws-main/config/elasticsearch-template.json"
+      template_name => "logsearch-l4aws-builtin"
+      template_overwrite => true
+    }
+  }
+}
