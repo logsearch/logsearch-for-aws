@@ -20,6 +20,9 @@ case $1 in
     # store this processes pid in $PIDFILE, since the exec below doesn't daemonize
     echo $$ > $PIDFILE
 
+    # avoid issues with large surges or backlogs being received
+    ulimit -n 64000
+
     exec /var/vcap/packages/logstash/logstash/bin/logstash agent \
          -f ${JOB_DIR}/config/logstash.conf -w ${LOGSTASH_WORKERS} \
          >>$LOG_DIR/$JOB_NAME.stdout.log \
