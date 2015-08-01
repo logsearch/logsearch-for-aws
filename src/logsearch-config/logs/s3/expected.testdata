@@ -1,0 +1,43 @@
+===
+79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be mybucket [06/Feb/2014:00:00:38 +0000] 192.0.2.3 79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be 3E57427F3EXAMPLE REST.GET.VERSIONING - "GET /mybucket?versioning HTTP/1.1" 200 - 113 - 7 - "-" "S3Console/0.4" -
+---
+{
+  "@timestamp": "2014-02-06T00:00:38Z",
+  "BucketOwner": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
+  "Bucket": "mybucket",
+  "Time": "06/Feb/2014:00:00:38 +0000",
+  "RemoteIp": "192.0.2.3",
+  "Requester": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
+  "RequestId": "3E57427F3EXAMPLE",
+  "Operation": "REST.GET.VERSIONING",
+  "RequestMethod": "GET",
+  "RequestUri": "/mybucket?versioning",
+  "HttpVersion": "1.1",
+  "HttpStatus": 200,
+  "BytesSent": 113,
+  "TotalTime": 7,
+  "UserAgent": "S3Console/0.4"
+}
+
+===
+79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be example-bucket [01/Aug/2015:07:00:55 +0000] 192.0.2.109 - 7EA8EE5DED32FD7B REST.GET.OBJECT static/ab69d2714c/vendor/requirejs/require.js "GET /static/ab69d2714c/vendor/requirejs/require.js HTTP/1.0" 200 - 23898 23898 43 42 "-" "Amazon CloudFront" -
+---
+{
+  "@timestamp": "2015-08-01T07:00:55Z",
+  "BucketOwner": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
+  "Bucket": "example-bucket",
+  "Time": "01/Aug/2015:07:00:55 +0000",
+  "RemoteIp": "192.0.2.109",
+  "RequestId": "7EA8EE5DED32FD7B",
+  "Operation": "REST.GET.OBJECT",
+  "Key": "static/ab69d2714c/vendor/requirejs/require.js",
+  "RequestMethod": "GET",
+  "RequestUri": "/static/ab69d2714c/vendor/requirejs/require.js",
+  "HttpVersion": "1.0",
+  "HttpStatus": 200,
+  "BytesSent": 23898,
+  "ObjectSize": 23898,
+  "TotalTime": 43,
+  "TurnAroundTime": 42,
+  "UserAgent": "Amazon CloudFront"
+}

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+set -u
+
+mkdir tmp-replay-$$
+
+cat | jq -c \
+  --arg BUCKET "${BACKFILL_BUCKET}" \
+  '.Contents[] | {
+    "Id" : .ETag | fromjson,
+    "MessageBody" : { 
+      "Message" : {
+        "s3Bucket" : $BUCKET,
+        "s3ObjectKey" : [ .Key ]
+      } | tostring
+    } | tostring
+  }' \
+  | (
+    cd tmp-replay-$$
+    split -l 10
+  )
+
+for CHUNK in $( find tmp-backfill-$$ -type f ) ; do
+  aws sqs send-message-batch \
+    --queue-url "${BACKFILL_QUEUE_URL}" \
+    --entries "$( cat ${CHUNK} | jq --slurp -r '. | tostring' )"
+done
+
+rm -fr tmp-replay-$$

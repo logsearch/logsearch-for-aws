@@ -1,0 +1,340 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Pre-configured pairs of SNS + SQS for use with logsearch-for-aws",
+  "Parameters": {
+    "BucketName": {
+      "AllowedPattern": "[0-9a-z\\-.]+",
+      "Default": "example-aws-logs",
+      "Description": "The bucket which will be forwarding notification messages.",
+      "Type": "String"
+    },
+    "ContextName": {
+      "AllowedPattern": "[0-9a-z\\-]+",
+      "Default": "l4aws-",
+      "Description": "A prefix used for all created SNS and SQS resources.",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "cloudtrailSns": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "cloudtrail"
+            ]
+          ]
+        },
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::GetAtt": [
+                "cloudtrailSqs",
+                "Arn"
+              ]
+            },
+            "Protocol": "sqs"
+          }
+        ],
+        "TopicName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "cloudtrail"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "cloudtrailSnsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Ref": "cloudtrailSns"
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": [
+                "SNS:Publish"
+              ],
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:*:*:",
+                        {
+                          "Ref": "BucketName"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Ref": "cloudtrailSns"
+              }
+            }
+          ],
+          "Version": "2008-10-17"
+        },
+        "Topics": [
+          {
+            "Ref": "cloudtrailSns"
+          }
+        ]
+      },
+      "Type": "AWS::SNS::TopicPolicy"
+    },
+    "cloudtrailSqs": {
+      "Properties": {
+        "DelaySeconds": 0,
+        "MaximumMessageSize": 65536,
+        "MessageRetentionPeriod": 604800,
+        "QueueName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "cloudtrail"
+            ]
+          ]
+        },
+        "ReceiveMessageWaitTimeSeconds": 20,
+        "VisibilityTimeout": 30
+      },
+      "Type": "AWS::SQS::Queue"
+    },
+    "cloudtrailSqsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Fn::GetAtt": [
+                    "cloudtrailSqs",
+                    "Arn"
+                  ]
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": {
+                    "Ref": "cloudtrailSns"
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "cloudtrailSqs",
+                  "Arn"
+                ]
+              },
+              "Sid": ""
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Queues": [
+          {
+            "Ref": "cloudtrailSqs"
+          }
+        ]
+      },
+      "Type": "AWS::SQS::QueuePolicy"
+    },
+    "s3Sns": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "s3"
+            ]
+          ]
+        },
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::GetAtt": [
+                "s3Sqs",
+                "Arn"
+              ]
+            },
+            "Protocol": "sqs"
+          }
+        ],
+        "TopicName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "s3"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "s3SnsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Ref": "s3Sns"
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": [
+                "SNS:Publish"
+              ],
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:*:*:",
+                        {
+                          "Ref": "BucketName"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Ref": "s3Sns"
+              }
+            }
+          ],
+          "Version": "2008-10-17"
+        },
+        "Topics": [
+          {
+            "Ref": "s3Sns"
+          }
+        ]
+      },
+      "Type": "AWS::SNS::TopicPolicy"
+    },
+    "s3Sqs": {
+      "Properties": {
+        "DelaySeconds": 0,
+        "MaximumMessageSize": 65536,
+        "MessageRetentionPeriod": 604800,
+        "QueueName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "s3"
+            ]
+          ]
+        },
+        "ReceiveMessageWaitTimeSeconds": 20,
+        "VisibilityTimeout": 30
+      },
+      "Type": "AWS::SQS::Queue"
+    },
+    "s3SqsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Fn::GetAtt": [
+                    "s3Sqs",
+                    "Arn"
+                  ]
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": {
+                    "Ref": "s3Sns"
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "s3Sqs",
+                  "Arn"
+                ]
+              },
+              "Sid": ""
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Queues": [
+          {
+            "Ref": "s3Sqs"
+          }
+        ]
+      },
+      "Type": "AWS::SQS::QueuePolicy"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+check process s3-notification
+  with pidfile /var/vcap/sys/run/s3-notification/main.pid
+  start program "/var/vcap/jobs/s3-notification/bin/monit_debugger main_ctl '/var/vcap/jobs/s3-notification/bin/main_ctl start'"
+  stop program "/var/vcap/jobs/s3-notification/bin/monit_debugger main_ctl '/var/vcap/jobs/s3-notification/bin/main_ctl stop'"
+  group vcap

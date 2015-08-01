@@ -1,0 +1,393 @@
+{
+    "_all": {
+        "enabled": false
+    },
+    "_source": {
+        "compress": true
+    },
+    "dynamic_templates": [
+        {
+            "sessionContext.attributes": {
+                "mapping": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "match_mapping_type": "string",
+                "path_match": "sessionContext.attributes.*"
+            }
+        },
+        {
+            "string_template": {
+                "mapping": {
+                    "index": "not_analyzed",
+                    "norms": {
+                        "enabled": false
+                    },
+                    "type": "string"
+                },
+                "match": "*",
+                "match_mapping_type": "string"
+            }
+        }
+    ],
+    "properties": {
+        "@timestamp": {
+            "type": "date"
+        },
+        "awsRegion": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "errorCode": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "errorMessage": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "eventID": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "eventName": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "eventSource": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "eventTime": {
+            "type": "date"
+        },
+        "eventType": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "eventVersion": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "recipientAccountId": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "requestID": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "requestParameters": {
+            "properties": {
+                "cluster": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "containerInstance": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "executableBySet": {
+                    "type": "object"
+                },
+                "filter": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "filterSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "valueSet": {
+                                    "properties": {
+                                        "items": {
+                                            "properties": {
+                                                "value": {
+                                                    "index": "not_analyzed",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "nested"
+                        }
+                    },
+                    "type": "object"
+                },
+                "imagesSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "imageId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "nested"
+                        }
+                    },
+                    "type": "object"
+                },
+                "instanceCount": {
+                    "type": "long"
+                },
+                "instancesSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "instanceId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "nested"
+                        }
+                    },
+                    "type": "object"
+                },
+                "launchGroup": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "launchSpecification": {
+                    "properties": {
+                        "availabilityZone": {
+                            "index": "not_analyzed",
+                            "type": "string"
+                        },
+                        "blockDeviceMapping": {
+                            "properties": {
+                                "items": {
+                                    "properties": {
+                                        "deviceName": {
+                                            "index": "not_analyzed",
+                                            "type": "string"
+                                        },
+                                        "ebs": {
+                                            "properties": {
+                                                "deleteOnTermination": {
+                                                    "type": "boolean"
+                                                },
+                                                "volumeSize": {
+                                                    "type": "long"
+                                                },
+                                                "volumeType": {
+                                                    "index": "not_analyzed",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "virtualName": {
+                                            "index": "not_analyzed",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "nested"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "groupSet": {
+                            "properties": {
+                                "items": {
+                                    "properties": {
+                                        "groupId": {
+                                            "index": "not_analyzed",
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "iamInstanceProfile": {
+                            "properties": {
+                                "name": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "imageId": {
+                            "index": "not_analyzed",
+                            "type": "string"
+                        },
+                        "instanceType": {
+                            "index": "not_analyzed",
+                            "type": "string"
+                        },
+                        "keyName": {
+                            "index": "not_analyzed",
+                            "type": "string"
+                        },
+                        "monitoring": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "maxItems": {
+                    "type": "long"
+                },
+                "ownersSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "owner": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "type": "object"
+                },
+                "regionSet": {
+                    "type": "object"
+                },
+                "reservedInstancesModificationSet": {
+                    "type": "object"
+                },
+                "reservedInstancesSet": {
+                    "type": "object"
+                },
+                "sharedUsersSet": {
+                    "type": "object"
+                },
+                "snapshotSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "snapshotId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "spotPrice": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "type": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "volumeSet": {
+                    "properties": {
+                        "items": {
+                            "properties": {
+                                "volumeId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "responseElements": {
+            "properties": {
+                "endpoint": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "telemetryEndpoint": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                }
+            }
+        },
+        "sourceIPAddress": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "userAgent": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "userIdentity": {
+            "properties": {
+                "accessKeyId": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "accountId": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "arn": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "invokedBy": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "principalId": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "sessionContext": {
+                    "properties": {
+                        "attributes": {
+                            "type": "object"
+                        },
+                        "sessionIssuer": {
+                            "properties": {
+                                "accountId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "arn": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "principalId": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                },
+                                "userName": {
+                                    "index": "not_analyzed",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "type": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "userName": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

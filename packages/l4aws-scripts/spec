@@ -1,0 +1,5 @@
+---
+name: "l4aws-scripts"
+dependencies: []
+files: 
+  - "scripts/*"

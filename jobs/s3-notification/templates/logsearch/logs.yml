@@ -1,0 +1,7 @@
+files:
+  /dev/null/cloudtrail:
+    fields:
+      type: l4aws-cloudtrail
+  /dev/null/s3:
+    fields:
+      type: l4aws-s3

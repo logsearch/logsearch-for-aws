@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#
+# CloudTrail uses gzip'd files and encodes them as JSON
+#
+
+set -e
+
+gunzip -c \
+  | /var/vcap/packages/l4aws-jq/jq -c '.Records[] | .'

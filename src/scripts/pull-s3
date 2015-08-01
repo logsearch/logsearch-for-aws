@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# args: log-format s3-region s3-bucket s3-object-key
+
+set -e
+set -u
+
+AWS_LOG_FORMAT="${1}"
+S3_REGION="${2}"
+S3_BUCKET="${3}"
+S3_OBJECT_KEY="${4}"
+
+if [ "us-east-1" == "${S3_REGION}" ] ; then
+  S3_ENDPOINT="s3-external-1.amazonaws.com"
+else
+  S3_ENDPOINT="s3-${S3_REGION}.amazonaws.com"
+fi
+
+LOCAL_FILE=$( basename "${S3_OBJECT_KEY}" ).log
+
+cd "/var/vcap/store/l4aws-${AWS_LOG_FORMAT}"
+
+# clean up older files
+find . -mtime +3 -exec rm {} \;
+
+S3GO_NOW=$( date -R )
+S3GO_SIGNATURE=$(
+  echo -en "GET\n\n\n${S3GO_NOW}\n/${S3_BUCKET}/${S3_OBJECT_KEY}" \
+    | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary \
+    | openssl enc -e -base64
+)
+
+curl \
+  -s \
+  -H "Date: ${S3GO_NOW}" \
+  -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${S3GO_SIGNATURE}" \
+  "https://${S3_ENDPOINT}/${S3_BUCKET}/${S3_OBJECT_KEY}" \
+  | /var/vcap/packages/l4aws-scripts/transform-${AWS_LOG_FORMAT} \
+  > ${LOCAL_FILE}
+
+# only move this after we've fully completed extraction
+mv ${LOCAL_FILE} logs/${LOCAL_FILE}

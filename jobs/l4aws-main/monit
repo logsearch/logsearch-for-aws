@@ -1,5 +1,0 @@
-check process l4aws-main
-  with pidfile /var/vcap/sys/run/l4aws-main/l4aws-main.pid
-  start program "/var/vcap/jobs/l4aws-main/bin/monit_debugger l4aws-main_ctl '/var/vcap/jobs/l4aws-main/bin/l4aws-main_ctl start'"
-  stop program "/var/vcap/jobs/l4aws-main/bin/monit_debugger l4aws-main_ctl '/var/vcap/jobs/l4aws-main/bin/l4aws-main_ctl stop'"
-  group vcap

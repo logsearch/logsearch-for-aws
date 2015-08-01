@@ -1,0 +1,18 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Pre-configured pairs of SNS + SQS for use with logsearch-for-aws",
+    "Parameters": {
+        "BucketName": {
+            "AllowedPattern": "[0-9a-z\\-.]+",
+            "Default": "example-aws-logs",
+            "Description": "The bucket which will be forwarding notification messages.",
+            "Type": "String"
+        },
+        "ContextName": {
+            "AllowedPattern": "[0-9a-z\\-]+",
+            "Default": "l4aws-",
+            "Description": "A prefix used for all created SNS and SQS resources.",
+            "Type": "String"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+  "Statement": [
+    {
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:GetQueueUrl",
+        "sqs:DeleteMessage"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:sqs:us-east-1:123456789012:l4aws-*"
+      ],
+      "Sid": "SQS"
+    },
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::example-aws-logs-us-east-1/AWSLogs/123456789012/CloudTrail/*",
+        "arn:aws:s3:::example-aws-logs-us-east-1/AWSLogs/123456789012/S3/*"
+      ],
+      "Sid": "S3"
+    }
+  ],
+  "Version": "2012-10-17"
+}
