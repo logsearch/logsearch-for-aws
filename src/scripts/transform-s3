@@ -1,9 +1,0 @@
-#!/bin/bash
-
-#
-# S3 logs are plain text
-#
-
-set -e
-
-cat

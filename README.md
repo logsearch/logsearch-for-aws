@@ -35,7 +35,7 @@ We don't like this setup because...
 Before getting started, you must set up the following AWS resources...
 
   * IAM credentials which allow working off the queue and downloading the referenced S3 files ([sample](./src/aws-helper/iam/sample-policy.json))
-  * Separate SQS Queues for the log types you use ([sample](./src/aws-helper/sns-sqs/))
+  * Separate SQS Queues for the log types you use ([sample](./src/aws-helper/s3-sns-sqs/))
 
 Fetch and install our logsearch configuration ([details](#@todo))...
 
@@ -87,7 +87,7 @@ If you want to add parsing for a new log type... here are the things you should 
      1. Write your test data and expectations to `expected.testdata`
      1. Write your logstash filter configurations to `logstash-filters.conf`
      1. Write your elasticsearch mapping configurations to `elasticsearch-mapping.json`
- 0. Update `src/aws-helper/sns-sqs/generator/regenerate.sh` (and then execute) to add the new log type.
+ 0. Update `src/aws-helper/s3-sns-sqs/generator/regenerate.sh` (and then execute) to add the new log type.
  0. Update `src/aws-helper/iam/sample-policy.json` to add the new sample directory (if applicable).
  0. Update `README.md` to add the log file format to our list of supported logs.
 

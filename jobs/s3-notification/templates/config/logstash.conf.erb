@@ -1,10 +1,6 @@
 input {
   <% p('l4aws.s3_notification.queues').each do | queue | %>
     sqs {
-      <% if p('l4aws.access_key_id') %>
-        access_key_id => "<%= p('l4aws.access_key_id') %>"
-        secret_access_key => "<%= p('l4aws.secret_access_key') %>"
-      <% end %>
       queue => "<%= queue[1] %>"
       region => "<%= queue[0] %>"
 

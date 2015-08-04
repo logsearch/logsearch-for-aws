@@ -14,13 +14,13 @@ Before starting, define some configuration values...
     $ export CONTEXT_NAME=l4aws-
     
     # we'll be creating a template; what should its name be?
-    $ export TEMPLATE_NAME=${CONTEXT_NAME}-sns-sqs
+    $ export TEMPLATE_NAME=${CONTEXT_NAME}-s3-sns-sqs
     
 First, use the template to create topics and queues for the different log formats...
 
     $ aws cloudformation create-stack \
       --stack-name "${TEMPLATE_NAME}" \
-      --template-body "file:///$PWD/sns-sqs.json" \
+      --template-body "file:///$PWD/cloudformation.json" \
       --parameters \
         ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
         ParameterKey=ContextName,ParameterValue=${CONTEXT_NAME}
