@@ -7,8 +7,6 @@ set -u # report the usage of uninitialized variables
 source /var/vcap/jobs/s3-notification/helpers/ctl_setup.sh 's3-notification'
 
 export LANG=en_US.UTF-8
-# 1 logstash worker / CPU core
-export LOGSTASH_WORKERS=`grep -c ^processor /proc/cpuinfo`
 
 for LOG_FORMAT in cloudtrail s3 ; do
   mkdir -p /var/vcap/store/l4aws-${LOG_FORMAT}/logs
@@ -30,7 +28,6 @@ case $1 in
 
     exec /var/vcap/packages/logstash/logstash/bin/logstash agent \
          -f ${JOB_DIR}/config/logstash.conf \
-         -w ${LOGSTASH_WORKERS} \
          >>$LOG_DIR/$JOB_NAME.stdout.log \
          2>>$LOG_DIR/$JOB_NAME.stderr.log
 
