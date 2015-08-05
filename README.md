@@ -7,6 +7,7 @@ A BOSH release to help you ingest, parse, and visualize your AWS logs.
 
 We can currently handle these log types...
 
+ * [Billing](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/detailed-billing-reports.html)
  * [CloudTrail](http://aws.amazon.com/cloudtrail/)
  * [S3 Server Logs](http://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html)
 
@@ -69,6 +70,7 @@ Update your deployment to add the release, templates, and properties...
         s3_notification:
           queues:
             # [ queue region , queue name         , log format type ]
+            - [ "us-east-1"  , "l4aws-billing"    , "billing"       ]
             - [ "us-east-1"  , "l4aws-cloudtrail" , "cloudtrail"    ]
             - [ "us-east-1"  , "l4aws-s3"         , "s3"            ]
 
@@ -77,7 +79,7 @@ Update your deployment to add the release, templates, and properties...
 
 If you want to add parsing for a new log type... here are the things you should keep in mind...
 
- 0. Update `l4aws-s3-notification` job templates...
+ 0. Update `s3-notification` job templates...
      1. `config/logstash.conf.erb` - add it to the list used to create `file` inputs
      1. `bin/main_ctl` - add it to the list used to `mkdir` directories
      1. `logsearch/logs.yml` - add a dummy entry to ensure the logsearch-config reference is active

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+set -u
+
+THISDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+FILTER=cat
+
+if [[ "${1}" =~ -aws-billing-detailed-line-items- ]] ; then
+  if [[ "${1}" =~ -aws-billing-detailed-line-items-with-resources-and-tags- ]] ; then
+    BILLING_TYPE=billing-detailed-line-items-with-resources-and-tags
+  else
+    BILLING_TYPE=billing-detailed-line-items
+  fi
+
+  FILTER="${THISDIR}/unzip"
+elif [[ "${1}" =~ -aws-billing-csv- ]] ; then
+  BILLING_TYPE=billing-csv
+elif [[ "${1}" =~ -aws-cost-allocation- ]] ; then
+  BILLING_TYPE=cost-allocation
+  FILTER="tail -n +2"
+else
+  echo "Unexpected billing type based on key: ${1}" >&2
+  
+  exit 1
+fi
+
+${FILTER} | "${THISDIR}/transform-billing-csv" "${1}" "${BILLING_TYPE}"

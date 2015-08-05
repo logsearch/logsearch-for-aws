@@ -8,7 +8,7 @@ source /var/vcap/jobs/s3-notification/helpers/ctl_setup.sh 's3-notification'
 
 export LANG=en_US.UTF-8
 
-for LOG_FORMAT in cloudtrail s3 ; do
+for LOG_FORMAT in billing cloudtrail s3 ; do
   mkdir -p /var/vcap/store/l4aws-${LOG_FORMAT}/logs
 done
 

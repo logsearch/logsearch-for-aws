@@ -16,6 +16,166 @@
     }
   },
   "Resources": {
+    "billingSns": {
+      "Properties": {
+        "DisplayName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "billing"
+            ]
+          ]
+        },
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Fn::GetAtt": [
+                "billingSqs",
+                "Arn"
+              ]
+            },
+            "Protocol": "sqs"
+          }
+        ],
+        "TopicName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "billing"
+            ]
+          ]
+        }
+      },
+      "Type": "AWS::SNS::Topic"
+    },
+    "billingSnsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Ref": "billingSns"
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": [
+                "SNS:Publish"
+              ],
+              "Condition": {
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:*:*:",
+                        {
+                          "Ref": "BucketName"
+                        }
+                      ]
+                    ]
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Resource": {
+                "Ref": "billingSns"
+              }
+            }
+          ],
+          "Version": "2008-10-17"
+        },
+        "Topics": [
+          {
+            "Ref": "billingSns"
+          }
+        ]
+      },
+      "Type": "AWS::SNS::TopicPolicy"
+    },
+    "billingSqs": {
+      "Properties": {
+        "DelaySeconds": 0,
+        "MaximumMessageSize": 65536,
+        "MessageRetentionPeriod": 604800,
+        "QueueName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "ContextName"
+              },
+              "billing"
+            ]
+          ]
+        },
+        "ReceiveMessageWaitTimeSeconds": 20,
+        "VisibilityTimeout": 30
+      },
+      "Type": "AWS::SQS::Queue"
+    },
+    "billingSqsPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Id": {
+            "Fn::Join": [
+              "/",
+              [
+                {
+                  "Fn::GetAtt": [
+                    "billingSqs",
+                    "Arn"
+                  ]
+                },
+                "SQSDefaultPolicy"
+              ]
+            ]
+          },
+          "Statement": [
+            {
+              "Action": "sqs:SendMessage",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": {
+                    "Ref": "billingSns"
+                  }
+                }
+              },
+              "Effect": "Allow",
+              "Principal": "*",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "billingSqs",
+                  "Arn"
+                ]
+              },
+              "Sid": ""
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Queues": [
+          {
+            "Ref": "billingSqs"
+          }
+        ]
+      },
+      "Type": "AWS::SQS::QueuePolicy"
+    },
     "cloudtrailSns": {
       "Properties": {
         "DisplayName": {

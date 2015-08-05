@@ -18,6 +18,7 @@
       ],
       "Effect": "Allow",
       "Resource": [
+        "arn:aws:s3:::example-aws-billing-us-east-1/*",
         "arn:aws:s3:::example-aws-logs-us-east-1/AWSLogs/123456789012/CloudTrail/*",
         "arn:aws:s3:::example-aws-logs-us-east-1/AWSLogs/123456789012/S3/*"
       ],

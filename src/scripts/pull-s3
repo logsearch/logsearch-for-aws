@@ -19,7 +19,7 @@ fi
 TRANSFORM=/var/vcap/packages/l4aws-scripts/transform-${AWS_LOG_FORMAT}
 
 if [ ! -e "${TRANSFORM}" ] ; then
-  TRANSFORM=cat
+  TRANSFORM=/var/vcap/packages/l4aws-scripts/cat
 fi
 
 LOCAL_FILE=$( basename "${S3_OBJECT_KEY}" ).log
@@ -41,7 +41,7 @@ curl \
   -H "Date: ${S3GO_NOW}" \
   -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${S3GO_SIGNATURE}" \
   "https://${S3_ENDPOINT}/${S3_BUCKET}/${S3_OBJECT_KEY}" \
-  | ${TRANSFORM} \
+  | ${TRANSFORM} ${S3_OBJECT_KEY} \
   > ${LOCAL_FILE}
 
 # only move this after we've fully completed extraction

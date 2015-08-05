@@ -9,7 +9,7 @@ input {
     }
   <% end %>
 
-  <% [ 'cloudtrail', 's3' ].each do | awsformat | %>
+  <% [ 'billing', 'cloudtrail', 's3' ].each do | awsformat | %>
     file {
       add_field => [ "@type", "l4aws-<%= awsformat %>" ]
       discover_interval => 30
