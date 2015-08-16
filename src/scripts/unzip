@@ -2,7 +2,7 @@
 
 THISDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-TMPFILE=$( mktemp l4awszip )
+TMPFILE=$( mktemp --tmpdir l4awszip-XXXXXX )
 
 cat > "${TMPFILE}"
 

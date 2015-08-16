@@ -11,10 +11,10 @@ Before starting, define some configuration values...
     $ export BUCKET_NAME=example-aws-logs
     
     # what prefix should we use for all the topics and queues?
-    $ export CONTEXT_NAME=l4aws-
+    $ export CONTEXT_NAME=l4aws-s3-
     
     # we'll be creating a template; what should its name be?
-    $ export TEMPLATE_NAME=${CONTEXT_NAME}-s3-sns-sqs
+    $ export TEMPLATE_NAME=${CONTEXT_NAME}sns-sqs
     
 First, use the template to create topics and queues for the different log formats...
 

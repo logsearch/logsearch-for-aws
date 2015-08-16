@@ -21,6 +21,10 @@ properties:
 
   l4aws.s3_notification.queues:
     description: "The queues to poll (array; values = [ queue-region, queue-name, log-type ])"
+    example:
+      - [ "us-east-1"  , "l4aws-s3-billing"    , "billing"    ]
+      - [ "us-east-1"  , "l4aws-s3-cloudtrail" , "cloudtrail" ]
+      - [ "us-east-1"  , "l4aws-s3-s3"         , "s3"         ]
 
   redis.host: 
     description: Redis host of queue

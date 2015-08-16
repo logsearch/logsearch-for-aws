@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/var/vcap/bosh/bin/ruby
 
 require 'csv'
 require 'json'

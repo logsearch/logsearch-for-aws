@@ -20,3 +20,5 @@ Then, `cat` the results into the appropriate helper script based on the job you'
 Once finished, you can remove the temporary results...
 
     $ rm tmp-replay-$$.json
+
+It may take some time before everything finishes processing.

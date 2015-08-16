@@ -26,17 +26,13 @@ We like this setup because...
   * can reuse our existing logsearch infrastructure for parsing and searching log events
   * using a queue is much more scalable than watching entire bucket paths for new files
 
-We don't like this setup because...
-
-  * occasionally logstash hangs with low level thread errors and needs to be restarted
-
 
 ## Usage
 
-Before getting started, you must set up the following AWS resources...
+Before getting started, you must set up the following in AWS...
 
   * IAM credentials which allow working off the queue and downloading the referenced S3 files ([sample](./src/aws-helper/iam/sample-policy.json))
-  * Separate SQS Queues for the log types you use ([sample](./src/aws-helper/s3-sns-sqs/))
+  * Separate SQS Queues and S3 Notifications for the log types and files you use ([sample](./src/aws-helper/s3-sns-sqs/))
 
 Fetch and install our logsearch configuration ([details](#@todo))...
 
@@ -94,6 +90,8 @@ If you want to add parsing for a new log type... here are the things you should 
  0. Update `README.md` to add the log file format to our list of supported logs.
 
 Once updated, run `./bin/logsearch-config` to test your log parsing filters and generate new configuration in `./logsearch-config`. Use those configuration files in your test environment and verify your new log runs through the whole process.
+
+Share your work with a Pull Request :)
 
 
 ## Additional Resources
