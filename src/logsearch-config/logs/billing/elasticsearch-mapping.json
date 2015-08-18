@@ -1,0 +1,119 @@
+{
+    "_all": {
+        "enabled": false
+    },
+    "dynamic_templates": [
+        {
+            "user": {
+                "mapping": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "match_mapping_type": "string",
+                "path_match": "user.*"
+            }
+        }
+    ],
+    "properties": {
+        "@timestamp": {
+            "type": "date"
+        },
+        "InvoiceID": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "PayerAccountId": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "LinkedAccountId": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "RecordType": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RecordId": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "ProductName": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RateId": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "SubscriptionId": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "PricingPlanId": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "UsageType": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Operation": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "AvailabilityZone": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "ReservedInstance": {
+            "index": "not_analyzed",
+            "type": "boolean"
+        },
+        "ItemDescription": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "UsageStartDate": {
+            "type": "date"
+        },
+        "UsageEndDate": {
+            "type": "date"
+        },
+        "UsageQuantity": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "Rate": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "Cost": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "ResourceId": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "CostBeforeTax": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "Credits": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "TaxAmount": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "TotalCost": {
+            "index": "not_analyzed",
+            "type": "float"
+        },
+        "user": {
+            "type": "object"
+        }
+    }
+}

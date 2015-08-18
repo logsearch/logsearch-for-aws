@@ -1,0 +1,10 @@
+files:
+  /dev/null/billing:
+    fields:
+      type: l4aws-billing-v1
+  /dev/null/cloudtrail:
+    fields:
+      type: l4aws-cloudtrail-v1
+  /dev/null/s3:
+    fields:
+      type: l4aws-s3-v1

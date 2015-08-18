@@ -1,0 +1,162 @@
+{
+    "{{LogFormat}}Sns": {
+        "Properties": {
+            "DisplayName": {
+                "Fn::Join": [
+                    "",
+                    [
+                        {
+                            "Ref": "ContextName"
+                        },
+                        "{{LogFormat}}"
+                    ]
+                ]
+            },
+            "Subscription": [
+                {
+                    "Endpoint": {
+                        "Fn::GetAtt": [
+                            "{{LogFormat}}Sqs",
+                            "Arn"
+                        ]
+                    },
+                    "Protocol": "sqs"
+                }
+            ],
+            "TopicName": {
+                "Fn::Join": [
+                    "",
+                    [
+                        {
+                            "Ref": "ContextName"
+                        },
+                        "{{LogFormat}}"
+                    ]
+                ]
+            }
+        },
+        "Type": "AWS::SNS::Topic"
+    },
+    "{{LogFormat}}SnsPolicy": {
+        "Properties": {
+            "PolicyDocument": {
+                "Id": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            {
+                                "Ref": "{{LogFormat}}Sns"
+                            },
+                            "SQSDefaultPolicy"
+                        ]
+                    ]
+                },
+                "Statement": [
+                    {
+                        "Action": [
+                            "SNS:Publish"
+                        ],
+                        "Condition": {
+                            "ArnLike": {
+                                "aws:SourceArn": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:s3:*:*:",
+                                            {
+                                                "Ref": "BucketName"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            }
+                        },
+                        "Effect": "Allow",
+                        "Principal": {
+                            "AWS": "*"
+                        },
+                        "Resource": {
+                            "Ref": "{{LogFormat}}Sns"
+                        }
+                    }
+                ],
+                "Version": "2008-10-17"
+            },
+            "Topics": [
+                {
+                    "Ref": "{{LogFormat}}Sns"
+                }
+            ]
+        },
+        "Type": "AWS::SNS::TopicPolicy"
+    },
+    "{{LogFormat}}Sqs": {
+        "Properties": {
+            "DelaySeconds": 0,
+            "MaximumMessageSize": 65536,
+            "MessageRetentionPeriod": 604800,
+            "QueueName": {
+                "Fn::Join": [
+                    "",
+                    [
+                        {
+                            "Ref": "ContextName"
+                        },
+                        "{{LogFormat}}"
+                    ]
+                ]
+            },
+            "ReceiveMessageWaitTimeSeconds": 20,
+            "VisibilityTimeout": 30
+        },
+        "Type": "AWS::SQS::Queue"
+    },
+    "{{LogFormat}}SqsPolicy": {
+        "Properties": {
+            "PolicyDocument": {
+                "Id": {
+                    "Fn::Join": [
+                        "/",
+                        [
+                            {
+                                "Fn::GetAtt": [
+                                    "{{LogFormat}}Sqs",
+                                    "Arn"
+                                ]
+                            },
+                            "SQSDefaultPolicy"
+                        ]
+                    ]
+                },
+                "Statement": [
+                    {
+                        "Action": "sqs:SendMessage",
+                        "Condition": {
+                            "ArnEquals": {
+                                "aws:SourceArn": {
+                                    "Ref": "{{LogFormat}}Sns"
+                                }
+                            }
+                        },
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Resource": {
+                            "Fn::GetAtt": [
+                                "{{LogFormat}}Sqs",
+                                "Arn"
+                            ]
+                        },
+                        "Sid": ""
+                    }
+                ],
+                "Version": "2012-10-17"
+            },
+            "Queues": [
+                {
+                    "Ref": "{{LogFormat}}Sqs"
+                }
+            ]
+        },
+        "Type": "AWS::SQS::QueuePolicy"
+    }
+}

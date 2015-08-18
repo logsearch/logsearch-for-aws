@@ -1,0 +1,36 @@
+---
+name: s3-notification
+packages: 
+  - logstash
+  - java7
+  - l4aws-jq
+  - l4aws-scripts
+templates:
+  bin/main_ctl: bin/main_ctl
+  bin/monit_debugger: bin/monit_debugger
+  config/logstash.conf.erb: config/logstash.conf
+  data/properties.sh.erb: data/properties.sh
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+  logsearch/logs.yml: logsearch/logs.yml
+properties:
+  l4aws.access_key_id:
+    description: "Access Key ID (shared for SQS and their referenced S3 files)"
+  l4aws.secret_access_key:
+    description: "Secret Access Key (shared for SQS and their referenced S3 files)"
+
+  l4aws.s3_notification.queues:
+    description: "The queues to poll (array; values = [ queue-region, queue-name, log-type ])"
+    example:
+      - [ "us-east-1"  , "l4aws-s3-billing"    , "billing"    ]
+      - [ "us-east-1"  , "l4aws-s3-cloudtrail" , "cloudtrail" ]
+      - [ "us-east-1"  , "l4aws-s3-s3"         , "s3"         ]
+
+  redis.host: 
+    description: Redis host of queue
+  redis.port: 
+    description: Redis port of queue
+    default: 6379
+  redis.key: 
+    description: Name of queue to push messages onto
+    default: logstash

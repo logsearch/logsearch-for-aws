@@ -4,13 +4,18 @@ set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
 # Setup env vars and folders for the webapp_ctl script
-source /var/vcap/jobs/l4aws-main/helpers/ctl_setup.sh 'l4aws-main'
+source /var/vcap/jobs/s3-notification/helpers/ctl_utils.sh
+
+JOB_NAME=s3-notification
+PIDFILE=/var/vcap/sys/run/$JOB_NAME/main.pid
+JOB_DIR=/var/vcap/jobs/$JOB_NAME
+LOG_DIR=/var/vcap/sys/log/$JOB_NAME
 
 export LANG=en_US.UTF-8
-# 1 logstash worker / CPU core
-export LOGSTASH_WORKERS=`grep -c ^processor /proc/cpuinfo`
 
-mkdir -p /var/vcap/store/l4aws-main/cloudtrail
+for LOG_FORMAT in billing cloudtrail s3 ; do
+  mkdir -p /var/vcap/store/l4aws-${LOG_FORMAT}/logs
+done
 
 case $1 in
 
@@ -23,8 +28,12 @@ case $1 in
     # avoid issues with large surges or backlogs being received
     ulimit -n 64000
 
+    export AWS_ACCESS_KEY_ID="<%= p('l4aws.access_key_id') %>"
+    export AWS_SECRET_ACCESS_KEY="<%= p('l4aws.secret_access_key') %>"
+    export PATH="/var/vcap/packages/java7/bin:$PATH"
+
     exec /var/vcap/packages/logstash/logstash/bin/logstash agent \
-         -f ${JOB_DIR}/config/logstash.conf -w ${LOGSTASH_WORKERS} \
+         -f ${JOB_DIR}/config/logstash.conf \
          >>$LOG_DIR/$JOB_NAME.stdout.log \
          2>>$LOG_DIR/$JOB_NAME.stderr.log
 
@@ -35,7 +44,7 @@ case $1 in
 
     ;;
   *)
-    echo "Usage: l4aws-main_ctl {start|stop}"
+    echo "Usage: main_ctl {start|stop}"
 
     ;;
 

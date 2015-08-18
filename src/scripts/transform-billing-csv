@@ -1,0 +1,54 @@
+#!/var/vcap/bosh/bin/ruby
+
+require 'csv'
+require 'json'
+
+CSV::Converters[:blank_to_nil] = lambda { | value |
+  value && "" == value ? nil : value
+}
+
+lines = CSV.new(
+  $stdin,
+  {
+    :headers => true,
+    :converters => [
+      :blank_to_nil,
+    ],
+  }
+)
+
+lines.each do | line |
+  h = Hash[line.to_a]
+  
+  # it's important that we annotate with the billing report type to avoid line items being exaggerated in charts
+  # also important we document the file because files get replaced nightly and you might want to prune previously imported events
+  h['@source'] = {
+    'aws_file' => ARGV[0],
+    'aws_type' => ARGV[1],
+  }
+  h['InvoiceID'] = h['InvoiceID'].to_i
+  h['PayerAccountId'] = h['PayerAccountId'].to_i
+  h['LinkedAccountId'] = h['LinkedAccountId'].to_i
+  h['RateId'] = h['RateId'].to_i
+  h['SubscriptionId'] = h['SubscriptionId'].to_i
+  h['PricingPlanId'] = h['PricingPlanId'].to_i
+  h['UsageQuantity'] = h['UsageQuantity'].to_f
+  h['Rate'] = h['Rate'].to_f
+  h['Cost'] = h['Cost'].to_f
+  h['CostBeforeTax'] = h['CostBeforeTax'].to_f
+  h['Credits'] = h['Credits'].to_f
+  h['TaxAmount'] = h['TaxAmount'].to_f
+  h['TotalCost'] = h['TotalCost'].to_f
+
+  user = {}
+  
+  h.each do | k, v |
+    next unless 'user:' == k[0..4]
+    
+    user[k[5..-1]] = h.delete(k)
+  end
+  
+  h['user'] = user if 0 < user.length
+
+  $stdout.puts JSON.generate(h)
+end

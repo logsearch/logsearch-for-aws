@@ -1,0 +1,90 @@
+{
+    "_all": {
+        "enabled": false
+    },
+    "properties": {
+        "@timestamp": {
+            "type": "date"
+        },
+        "Bucket": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "BucketOwner": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Operation": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RemoteIp": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RequestId": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Requester": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Time": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Key": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RequestMethod": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "RequestUri": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "HttpVersion": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "HttpStatus": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "ErrorCode": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "BytesSent": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "ObjectSize": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "TotalTime": {
+            "index": "not_analyzed",
+            "type": "integer"
+        },
+        "TurnAroundTime": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Referrer": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "UserAgent": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "VersionId": {
+            "index": "not_analyzed",
+            "type": "string"
+        }
+    }
+}

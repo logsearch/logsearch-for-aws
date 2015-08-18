@@ -1,0 +1,56 @@
+input {
+  <% p('l4aws.s3_notification.queues').each do | queue | %>
+    sqs {
+      queue => "<%= queue[1] %>"
+      region => "<%= queue[0] %>"
+
+      add_field => [ "@type", "internal-s3-notification" ]
+      add_field => [ "@awsformat", "<%= queue[2] %>" ]
+    }
+  <% end %>
+
+  <% [ 'billing', 'cloudtrail', 's3' ].each do | awsformat | %>
+    file {
+      add_field => [ "@type", "l4aws-<%= awsformat %>-v1" ]
+      discover_interval => 30
+      path => "/var/vcap/store/l4aws-<%= awsformat %>/logs/*"
+      sincedb_path => "/var/vcap/store/l4aws-<%= awsformat %>/logstash.sincedb"
+      start_position => "beginning"
+    }
+  <% end %>
+}
+
+filter {
+  if "internal-s3-notification" == [@type] {
+    json {
+      source => "Message"
+      target => "MessageObj"
+    }
+  } else {
+    # file names are arbitrary with this tool; drop them
+    mutate {
+      remove_field => [ "host" , "path" ]
+    }
+  }
+}
+
+output {
+  if "internal-s3-notification" == [@type] {
+    exec {
+      command => "/var/vcap/packages/l4aws-scripts/pull-s3 %{@awsformat} %{MessageObj[Records][0][awsRegion]} %{MessageObj[Records][0][s3][bucket][name]} %{MessageObj[Records][0][s3][object][key]}"
+    }
+    
+    stdout {
+      codec => json_lines
+    }
+  } else {
+  	redis {
+  		host => "<%= p("redis.host") %>"
+  		port => "<%= p("redis.port") %>"
+  		data_type => "list"
+  		key => "<%= p("redis.key") %>"
+  		batch => true
+  		batch_events => 50
+  	}
+  }
+}

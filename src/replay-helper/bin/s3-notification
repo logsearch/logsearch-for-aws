@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+set -u
+
+mkdir tmp-replay-$$
+
+cat | jq -c \
+  --arg BUCKET "${BACKFILL_BUCKET}" \
+  --arg BUCKET_REGION $( aws s3api get-bucket-location --bucket="${BACKFILL_BUCKET}" | jq -r '.LocationConstraint // "us-east-1"' ) \
+  --arg AWS_REGION "${AWS_DEFAULT_REGION}" \
+  '.Contents[] | {
+    "Id" : .ETag | fromjson,
+    "MessageBody" : { 
+      "Message" : {
+        "Records" : [
+          {
+            "awsRegion" : $BUCKET_REGION,
+            "s3" : {
+              "bucket" : {
+                "name" : $BUCKET
+              },
+              "object" : {
+                "key" : .Key
+              }
+            }
+          }
+        ]
+      } | tostring
+    } | tostring
+  }' \
+  | (
+    cd tmp-replay-$$
+    split -l 10
+  )
+
+for CHUNK in $( find tmp-replay-$$ -type f ) ; do
+  aws sqs send-message-batch \
+    --queue-url "${BACKFILL_QUEUE_URL}" \
+    --entries "$( cat ${CHUNK} | jq --slurp -r '. | tostring' )"
+done
+
+rm -fr tmp-replay-$$

@@ -6,3 +6,5 @@
 /config/private.yml
 /config/dev.yml
 /dev_releases
+/logsearch-config
+/logsearch-config.tgz

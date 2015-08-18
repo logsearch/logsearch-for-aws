@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#
+# simple wrapper to ignore the arguments
+#
+
+cat

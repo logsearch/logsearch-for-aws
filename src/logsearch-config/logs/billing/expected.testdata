@@ -1,0 +1,38 @@
+===
+{"InvoiceID":12345678,"PayerAccountId":123456789012,"LinkedAccountId":123456789012,"RecordType":"LineItem","RecordId":"30000000000000000000000004","ProductName":"Amazon Elastic Compute Cloud","RateId":3510857,"SubscriptionId":38594942,"PricingPlanId":505699,"UsageType":"USW2-DataTransfer-Regional-Bytes","Operation":"InterZone-Out","AvailabilityZone":null,"ReservedInstance":"N","ItemDescription":"$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using IPs or ELB","UsageStartDate":"2015-07-01 00:00:00","UsageEndDate":"2015-07-01 01:00:00","UsageQuantity":0.06222631,"Rate":0.01,"Cost":0.00062226,"ResourceId":"i-27d59dd0","@source":{"aws_file":"123456789012-aws-billing-detailed-line-items-2014-07.csv.zip","aws_type":"billing-detailed-line-items"},"CostBeforeTax":0.0,"Credits":0.0,"TaxAmount":0.0,"TotalCost":0.0,"user":{"deployment":"elasticsearch-publicweb","director":"prod-abraxas-aws-usw2"}}
+---
+{
+  "@timestamp": "2015-07-01T01:00:00Z",
+  "InvoiceID": 12345678,
+  "PayerAccountId": 123456789012,
+  "LinkedAccountId": 123456789012,
+  "RecordType": "LineItem",
+  "RecordId": "30000000000000000000000004",
+  "ProductName": "Amazon Elastic Compute Cloud",
+  "RateId": 3510857,
+  "SubscriptionId": 38594942,
+  "PricingPlanId": 505699,
+  "UsageType": "USW2-DataTransfer-Regional-Bytes",
+  "Operation": "InterZone-Out",
+  "AvailabilityZone": null,
+  "ReservedInstance": "N",
+  "ItemDescription": "$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using IPs or ELB",
+  "UsageStartDate": "2015-07-01 00:00:00",
+  "UsageEndDate": "2015-07-01 01:00:00",
+  "UsageQuantity": 0.06222631,
+  "Rate": 0.01,
+  "Cost": 0.00062226,
+  "ResourceId": "i-27d59dd0",
+  "@source": {
+    "aws_file": "123456789012-aws-billing-detailed-line-items-2014-07.csv.zip",
+    "aws_type": "billing-detailed-line-items"
+  },
+  "CostBeforeTax": 0,
+  "Credits": 0,
+  "TaxAmount": 0,
+  "TotalCost": 0,
+  "user": {
+    "deployment": "elasticsearch-publicweb",
+    "director": "prod-abraxas-aws-usw2"
+  }
+}
